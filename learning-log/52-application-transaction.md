@@ -1,0 +1,20 @@
+# The pre-flight checks (getOpenJobs, checkExistingApplications, buildApplicantSnapshot) all run outside the transaction using db.query. This means they run on potentially different connections from the transaction. Describe a specific race condition where the result of the pre-flight getOpenJobs check becomes stale by the time the transaction INSERT runs. Then describe the operational consequence: what state does the database end up in, and how would a recruiter observe it?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+.env.*.local
+.env
+.env.production
+cookies.txt
+login.json
+Salary*
+nginx/certs/
+backend/*.json
+!backend/package.json
+!backend/package-lock.json
+!backend/tsconfig.json
+frontend/draftjob.json
