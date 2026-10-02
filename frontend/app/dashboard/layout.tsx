@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-
+import LogoutButton from './LogoutButton';
 function decodeRole(token: string): string | null {
   try {
     const payload = token.split('.')[1];
@@ -23,7 +23,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="flex min-h-screen">
-      <nav className="w-48 border-r p-4 space-y-2">
+      <nav className="w-48 border-r p-4 space-y-2 flex flex-col">
         {role === 'recruiter' && (
           <>
             <p className="text-xs font-semibold uppercase text-gray-400 mb-3">Company</p>
@@ -48,7 +48,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
               Profile
             </Link>
           </>
+
         )}
+        <div className="mt-auto pt-4 border-t">
+          <LogoutButton />
+        </div>
+        
       </nav>
       <main className="flex-1">{children}</main>
     </div>

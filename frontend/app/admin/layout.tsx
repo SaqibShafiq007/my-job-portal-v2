@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-
+import LogoutButton from '../dashboard/LogoutButton';
 // Decodes the JWT payload to read the role claim, without needing a /me endpoint.
 function decodeRole(token: string): string | null {
   try {
@@ -26,7 +26,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="flex min-h-screen">
-      <nav className="w-48 border-r p-4 space-y-2">
+      <nav className="w-48 border-r p-4 space-y-2 flex flex-col">
         <p className="text-xs font-semibold uppercase text-gray-400 mb-3">Admin</p>
         <Link href="/admin/companies" className="block text-sm hover:text-blue-600">
           Companies
@@ -37,6 +37,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <Link href="/admin/users" className="block text-sm hover:text-blue-600">
           Users
         </Link>
+          <div className="mt-auto pt-4 border-t">
+            <LogoutButton />
+          </div>
       </nav>
       <main className="flex-1">{children}</main>
     </div>

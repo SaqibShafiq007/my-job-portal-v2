@@ -1,0 +1,26 @@
+import { redirect } from 'next/navigation';
+import { apiFetch } from '@/lib/api';
+import ProfileForm from './ProfileForm';
+
+export default async function ProfilePage() {
+  const res = await apiFetch('/api/applicants/profile');
+  if (res.status === 401) redirect('/login');
+
+  const profile = res.ok ? await res.json() : null;
+
+  return (
+    <main className="mx-auto max-w-xl p-6">
+      <h1 className="mb-6 text-2xl font-semibold">
+        {profile ? 'Edit your profile' : 'Create your profile'}
+      </h1>
+      <ProfileForm
+        exists={!!profile}
+        initial={{
+          full_name: profile?.full_name ?? '',
+          headline: profile?.headline ?? '',
+          location: profile?.location ?? '',
+        }}
+      />
+    </main>
+  );
+}

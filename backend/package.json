@@ -13,7 +13,8 @@
     "migrate": "tsx node_modules/node-pg-migrate/bin/node-pg-migrate up",
     "migrate:down": "tsx node_modules/node-pg-migrate/bin/node-pg-migrate down 1",
     "migrate:create": "node-pg-migrate create --migration-file-language ts",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "create-admin": "tsx scripts/create-admin.ts"
   },
   "repository": {
     "type": "git",

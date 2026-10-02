@@ -19,7 +19,10 @@ export default async function ShortlistPage() {
       <main className="p-6">
         <h1 className="text-2xl font-semibold mb-4">My Shortlist</h1>
         <p className="text-gray-500">
-          You need to create your profile before you can shortlist jobs.
+          You need to create your profile before you can shortlist jobs.{' '}
+          <Link href="/dashboard/profile" className="text-blue-600 hover:underline">
+            Create your profile
+          </Link>
         </p>
       </main>
     );
