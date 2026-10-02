@@ -22,8 +22,20 @@ export default async function JobsPage({
   params.set('limit', '20');
 
   const res = await apiFetch(`/api/jobs?${params.toString()}`);
-  const data: { jobs: Job[]; nextCursor: string | null } = await res.json();
 
+if (!res.ok) {
+  const err = await res.json().catch(() => null);
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-4">Jobs</h1>
+      <p className="text-red-600 text-sm">
+        {err?.error?.message ?? 'Could not load jobs'}
+      </p>
+    </div>
+  );
+}
+
+const data: { jobs: Job[]; nextCursor: string | null } = await res.json();
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
