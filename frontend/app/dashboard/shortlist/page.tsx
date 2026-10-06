@@ -1,5 +1,6 @@
 import { apiFetch } from '@/lib/api';
 import Link from 'next/link';
+import RemoveButton from './RemoveButton';
 
 type ShortlistItem = {
   id: string;
@@ -12,7 +13,7 @@ type ShortlistItem = {
 
 export default async function ShortlistPage() {
   const res = await apiFetch('/api/applicants/shortlist');
-  const data = await res.json();
+  const data = await res.json().catch(() => null);
 
   if (res.status === 404 && data?.error?.code === 'NOT_FOUND') {
     return (
@@ -54,6 +55,7 @@ export default async function ShortlistPage() {
                 {item.title} — {item.company_name}
               </Link>
               <span className="ml-2 text-xs text-gray-500">({item.job_status})</span>
+              <RemoveButton jobId={item.job_id} />
             </li>
           ))}
         </ul>
