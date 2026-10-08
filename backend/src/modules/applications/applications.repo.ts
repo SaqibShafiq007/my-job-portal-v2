@@ -95,8 +95,10 @@ export async function findApplicationsForCompany(companyId: string) {
   const result = await db.query(
     `SELECT
        a.id,
+       a.job_id,
        a.stage,
        a.created_at,
+       a.profile_snapshot->>'fullName' AS full_name,
        a.profile_snapshot->>'headline' AS headline,
        a.applicant_id,
        j.title AS job_title,

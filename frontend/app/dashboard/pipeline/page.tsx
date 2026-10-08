@@ -13,6 +13,8 @@ type Interview = {
 
 type PipelineApplication = {
   id: string;
+  job_id: string;
+  full_name: string | null;
   stage: string;
   created_at: string;
   headline: string | null;
@@ -73,7 +75,8 @@ export default async function PipelinePage() {
                 <ul className="space-y-2">
                   {items.map((app) => (
                     <li key={app.id} className="border-b pb-2">
-                      <p>{app.job_title}</p>
+                      <p className="font-medium">{app.full_name ?? 'Unknown applicant'}</p>
+                      <p className="text-sm">Applied for: {app.job_title}</p>
                       <p className="text-sm text-gray-400">
                         {app.headline ?? 'No headline'} · Applied on{' '}
                         {new Date(app.created_at).toLocaleDateString('en-GB')}
