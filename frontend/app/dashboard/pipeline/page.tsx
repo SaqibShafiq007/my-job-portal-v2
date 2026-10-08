@@ -2,6 +2,7 @@
 import { apiFetch } from '@/lib/api';
 import StageActions from './StageActions';
 import ScheduleInterview from './ScheduleInterview';
+import FeedbackForm from './FeedbackForm';
 
 type Interview = {
   id: string;
@@ -85,7 +86,12 @@ export default async function PipelinePage() {
                         </p>
                       )}
                       <StageActions applicationId={app.id} currentStage={app.stage} />
-                      <ScheduleInterview applicationId={app.id} currentStage={app.stage} />
+                      <div className="flex gap-4">
+                        <ScheduleInterview applicationId={app.id} currentStage={app.stage} />
+                        {app.latest_interview?.outcome === 'pending' && (
+                          <FeedbackForm interviewId={app.latest_interview.id} />
+                        )}
+                      </div>
                     </li>
                   ))}
                 </ul>
