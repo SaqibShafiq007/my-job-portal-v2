@@ -50,7 +50,13 @@ export default async function JobDetailPage({
       <h1 className="text-2xl font-semibold mt-4 mb-2">{job.title}</h1>
       <span className="text-sm text-gray-500 capitalize">{job.status}</span>
       <p className="mt-4 text-sm whitespace-pre-wrap">{job.description}</p>
-      <div className="mt-6">
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+        <Link
+          href={`/dashboard/jobs/${id}/edit`}
+          className="border rounded px-3 py-1 text-sm"
+        >
+          Edit
+        </Link>
         <JobActions jobId={id} currentStatus={job.status} />
       </div>
     </div>
