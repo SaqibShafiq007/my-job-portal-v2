@@ -1,5 +1,7 @@
+import { cookies } from 'next/headers';
 import { apiFetch } from '@/lib/api';
 import InviteForm from './InviteForm';
+import MemberActions from './MemberActions';
 
 type Member = {
   recruiterId: string;
@@ -8,6 +10,16 @@ type Member = {
   companyRole: string;
   joinedAt: string;
 };
+
+function getUserIdFromToken(token: string | undefined): string | null {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8'));
+    return typeof payload.sub === 'string' ? payload.sub : null;
+  } catch {
+    return null;
+  }
+}
 
 export default async function MembersPage() {
   const res = await apiFetch('/api/companies/members');
@@ -32,6 +44,12 @@ export default async function MembersPage() {
 
   const data = (await res.json()) as { members: Member[] };
 
+  const cookieStore = await cookies();
+  const myUserId = getUserIdFromToken(cookieStore.get('access_token')?.value);
+  const iAmOwner = data.members.some(
+    (m) => m.userId === myUserId && m.companyRole === 'owner',
+  );
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-4">Team members</h1>
@@ -43,19 +61,35 @@ export default async function MembersPage() {
           <tr className="text-left border-b">
             <th className="py-2 pr-4">Email</th>
             <th className="py-2 pr-4">Role</th>
-            <th className="py-2">Joined</th>
+            <th className="py-2 pr-4">Joined</th>
+            <th className="py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {data.members.map((m) => (
-            <tr key={m.recruiterId} className="border-b">
-              <td className="py-2 pr-4">{m.email}</td>
-              <td className="py-2 pr-4 capitalize">{m.companyRole.replace('_', ' ')}</td>
-              <td className="py-2 text-gray-500">
-                {new Date(m.joinedAt).toLocaleDateString('en-GB')}
-              </td>
-            </tr>
-          ))}
+          {data.members.map((m) => {
+            const isMe = m.userId === myUserId;
+            const isOwnerRow = m.companyRole === 'owner';
+            return (
+              <tr key={m.recruiterId} className="border-b">
+                <td className="py-2 pr-4">{m.email}</td>
+                <td className="py-2 pr-4 capitalize">{m.companyRole.replace('_', ' ')}</td>
+                <td className="py-2 pr-4 text-gray-500">
+                  {new Date(m.joinedAt).toLocaleDateString('en-GB')}
+                </td>
+                <td className="py-2">
+                  {isMe || isOwnerRow ? (
+                    <span className="text-gray-500">-</span>
+                  ) : (
+                    <MemberActions
+                      recruiterId={m.recruiterId}
+                      currentRole={m.companyRole}
+                      isOwner={iAmOwner}
+                    />
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
