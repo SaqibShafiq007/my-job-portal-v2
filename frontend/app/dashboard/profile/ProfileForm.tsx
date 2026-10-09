@@ -39,7 +39,7 @@ export default function ProfileForm({
           location: values.location.trim() || undefined,
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
       if (!res.ok) {
         setError(extractError(data, 'Could not save your profile.'));
         return;

@@ -25,6 +25,7 @@ async function fetchCompanies(status?: string) {
     headers: { Authorization: `Bearer ${token}` },
     cache: 'no-store',
   });
+  if (!res.ok) return null;
   const data = await res.json();
   return data.companies as Company[];
 }
@@ -37,6 +38,14 @@ export default async function CompaniesPage({
   const resolvedParams = await searchParams;
   const companies = await fetchCompanies(resolvedParams.status);
 
+  if (!companies) {
+    return (
+      <section className="p-6">
+        <h1 className="text-2xl font-semibold mb-4">Companies</h1>
+        <p className="text-sm text-red-600">Could not load companies. Please try again.</p>
+      </section>
+    );
+  }
   return (
     <section className="p-6">
       <h1 className="text-2xl font-semibold mb-4">Companies</h1>

@@ -3,7 +3,7 @@ import { apiFetch } from '@/lib/api';
 import StageActions from './StageActions';
 import ScheduleInterview from './ScheduleInterview';
 import FeedbackForm from './FeedbackForm';
-
+import ResumeLink from './ResumeLink';
 type Interview = {
   id: string;
   scheduled_at: string;
@@ -87,7 +87,8 @@ export default async function PipelinePage() {
                           {new Date(app.latest_interview.scheduled_at).toLocaleString('en-GB')} (
                           {app.latest_interview.outcome})
                         </p>
-                      )}
+                      )}  
+                      <ResumeLink applicationId={app.id} />
                       <StageActions applicationId={app.id} currentStage={app.stage} />
                       <div className="flex gap-4">
                         <ScheduleInterview applicationId={app.id} currentStage={app.stage} />

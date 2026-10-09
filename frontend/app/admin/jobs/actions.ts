@@ -10,10 +10,12 @@ export async function closeJob(formData: FormData) {
   const token = cookieStore.get('access_token')?.value ?? '';
   const id = formData.get('id') as string;
 
-  await fetch(`${process.env.API_URL}/api/admin/jobs/${id}/close`, {
+    const res = await fetch(`${process.env.API_URL}/api/admin/jobs/${id}/close`, {
     method: 'PATCH',
     headers: { Authorization: `Bearer ${token}` },
   });
+
+  if (!res.ok) throw new Error(`Job close failed (${res.status})`);
 
   revalidatePath('/admin/jobs');
 }

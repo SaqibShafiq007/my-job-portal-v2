@@ -16,5 +16,10 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify(body),
   });
 
-  return NextResponse.json(await res.json(), { status: res.status });
+  const data = await res.json().catch(() => null);
+
+  return NextResponse.json(
+    data ?? { error: { code: 'BAD_GATEWAY', message: 'Unexpected response from server' } },
+        { status: data ? res.status : res.ok ? 502 : res.status }
+  );
 }

@@ -9,10 +9,12 @@ async function patchCompany(id: string, action: 'verify' | 'suspend') {
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value ?? '';
 
-  await fetch(`${process.env.API_URL}/api/admin/companies/${id}/${action}`, {
+    const res = await fetch(`${process.env.API_URL}/api/admin/companies/${id}/${action}`, {
     method: 'PATCH',
     headers: { Authorization: `Bearer ${token}` },
   });
+
+  if (!res.ok) throw new Error(`Company ${action} failed (${res.status})`);
 
   revalidatePath('/admin/companies');
 }

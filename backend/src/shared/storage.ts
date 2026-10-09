@@ -1,5 +1,5 @@
 // src/shared/storage.ts
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { config } from './config';
 
@@ -25,5 +25,10 @@ export async function getPresignedUploadUrl(
     Key: key,
     ContentType: contentType,
   });
+  return getSignedUrl(s3, command, { expiresIn });
+}
+// Generates a short-lived presigned URL that allows a client to download an object directly.
+export async function getPresignedDownloadUrl(key: string, expiresIn = 300): Promise<string> {
+  const command = new GetObjectCommand({ Bucket: config.S3_BUCKET, Key: key });
   return getSignedUrl(s3, command, { expiresIn });
 }

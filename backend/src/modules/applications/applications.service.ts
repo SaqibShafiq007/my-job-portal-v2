@@ -2,7 +2,7 @@ import * as repo from './applications.repo';
 import { getRecruiterCompany } from '../companies/companies.repo';
 import { BadRequestError, NotFoundError, ForbiddenError } from '../../shared/errors';
 import { sendInterviewNotification } from '../../shared/mailer';
-
+import { getPresignedDownloadUrl } from '../../shared/storage';
 const STAGE_ORDER = [
   'applied', 'screening', 'interview', 'final_interview', 'offer', 'hired', 'rejected',
 ] as const;
@@ -152,4 +152,15 @@ export async function getCompanyPipeline(userId: string) {
   }
 
   return pipeline;
+}
+
+export async function getApplicationResumeUrl(userId: string, applicationId: string) {
+  const company = await getRecruiterCompany(userId);
+  if (!company) throw new ForbiddenError('No company workspace found.');
+
+  const row = await repo.findResumeKeyForCompany(applicationId, company.companyId);
+  if (!row) throw new NotFoundError('Application not found');
+  if (!row.resume_key) throw new NotFoundError('This applicant has not uploaded a resume');
+
+  return getPresignedDownloadUrl(row.resume_key);
 }

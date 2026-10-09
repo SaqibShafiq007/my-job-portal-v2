@@ -120,3 +120,14 @@ export async function findApplicationsForCompany(companyId: string) {
   );
   return result.rows;
 }
+
+export async function findResumeKeyForCompany(applicationId: string, companyId: string) {
+  const result = await db.query(
+    `SELECT a.profile_snapshot->>'resumeKey' AS resume_key
+     FROM applications a
+     JOIN jobs j ON j.id = a.job_id
+     WHERE a.id = $1 AND j.company_id = $2`,
+    [applicationId, companyId],
+  );
+  return result.rows[0] ?? null;
+}

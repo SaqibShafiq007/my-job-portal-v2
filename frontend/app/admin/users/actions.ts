@@ -9,10 +9,12 @@ async function patchUser(id: string, action: 'suspend' | 'activate') {
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value ?? '';
 
-  await fetch(`${process.env.API_URL}/api/admin/users/${id}/${action}`, {
+    const res = await fetch(`${process.env.API_URL}/api/admin/users/${id}/${action}`, {
     method: 'PATCH',
     headers: { Authorization: `Bearer ${token}` },
   });
+
+  if (!res.ok) throw new Error(`User ${action} failed (${res.status})`);
 
   revalidatePath('/admin/users');
 }

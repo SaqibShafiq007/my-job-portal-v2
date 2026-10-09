@@ -25,6 +25,7 @@ async function fetchUsers(role?: string, status?: string) {
     headers: { Authorization: `Bearer ${token}` },
     cache: 'no-store',
   });
+    if (!res.ok) return null;
   const data = await res.json();
   return data.users as User[];
 }
@@ -35,8 +36,16 @@ export default async function UsersPage({
   searchParams: Promise<{ role?: string; status?: string }>;
 }) {
   const resolvedParams = await searchParams;
-  const users = await fetchUsers(resolvedParams.role, resolvedParams.status);
+    const users = await fetchUsers(resolvedParams.role, resolvedParams.status);
 
+  if (!users) {
+    return (
+      <section className="p-6">
+        <h1 className="text-2xl font-semibold mb-4">Users</h1>
+        <p className="text-sm text-red-600">Could not load users. Please try again.</p>
+      </section>
+    );
+  }
   return (
     <section className="p-6">
       <h1 className="text-2xl font-semibold mb-4">Users</h1>

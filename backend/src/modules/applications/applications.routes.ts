@@ -48,6 +48,14 @@ router.patch('/:id/feedback', async (req, res, next) => {
   }
 });
 
+router.get('/:id/resume', async (req, res, next) => {
+  try {
+    const url = await service.getApplicationResumeUrl(req.user!.userId, req.params.id);
+    res.json({ url });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get('/', async (req, res, next) => {
   try {

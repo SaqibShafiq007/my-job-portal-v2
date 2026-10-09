@@ -21,6 +21,7 @@ async function fetchJobs(status?: string) {
     headers: { Authorization: `Bearer ${token}` },
     cache: 'no-store',
   });
+  if (!res.ok) return null;
   const data = await res.json();
   return data.jobs as Job[];
 }
@@ -31,8 +32,16 @@ export default async function JobsPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const resolvedParams = await searchParams;
-  const jobs = await fetchJobs(resolvedParams.status);
+    const jobs = await fetchJobs(resolvedParams.status);
 
+  if (!jobs) {
+    return (
+      <section className="p-6">
+        <h1 className="text-2xl font-semibold mb-4">Jobs</h1>
+        <p className="text-sm text-red-600">Could not load jobs. Please try again.</p>
+      </section>
+    );
+  }
   return (
     <section className="p-6">
       <h1 className="text-2xl font-semibold mb-4">Jobs</h1>

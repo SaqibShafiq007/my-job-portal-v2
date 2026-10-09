@@ -15,19 +15,29 @@ export default function ResumeUpload() {
     setMessage(null);
 
     try {
-      // Step 1: get presigned URL from our backend (via proxy route)
+            // Step 1: get presigned URL from our backend (via proxy route)
       const uploadUrlRes = await fetch('/api/applicants/profile/resume-upload', {
         method: 'POST',
       });
+
+      if (!uploadUrlRes.ok) {
+        setMessage('Could not start upload.');
+        return;
+      }
+
       const { uploadUrl, key } = await uploadUrlRes.json();
 
       // Step 2: PUT directly to MinIO/S3 — no API server involved
-      await fetch(uploadUrl, {
+      const putRes = await fetch(uploadUrl, {
         method: 'PUT',
         body: file,
         headers: { 'Content-Type': 'application/pdf' },
       });
 
+      if (!putRes.ok) {
+        setMessage('File upload failed. Please try again.');
+        return;
+      }
       // Step 3: confirm the upload with our backend
       const confirmRes = await fetch('/api/applicants/profile/resume', {
         method: 'POST',
