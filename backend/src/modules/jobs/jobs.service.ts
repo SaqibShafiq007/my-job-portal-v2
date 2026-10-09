@@ -33,7 +33,14 @@ export async function editJob(
   // Confirm the job belongs to this company (throws NotFoundError if not)
   await assertJobOwnership(jobId, company.companyId);
 
-  await updateJob(jobId, company.companyId, input);
+    await updateJob(jobId, company.companyId, input);
+
+  // Editing a job changes what the public board shows (title, etc.).
+  try {
+    await redis.del(PUBLIC_BOARD_CACHE_KEY);
+  } catch (err) {
+    logger.error({ err }, '[cache] Failed to invalidate public board cache');
+  }
 }
 
 

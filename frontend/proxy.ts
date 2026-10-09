@@ -28,11 +28,23 @@ function redirectToLogin(req: NextRequest) {
   return res;
 }
 
+const RECRUITER_PATHS = [
+  '/dashboard/jobs',
+  '/dashboard/pipeline',
+  '/dashboard/members',
+  '/dashboard/company',
+];
+
 function roleAllowed(pathname: string, role: string): boolean {
   if (pathname.startsWith('/admin') && role !== 'admin') return false;
+  if (
+    role === 'applicant' &&
+    RECRUITER_PATHS.some((p) => pathname.startsWith(p))
+  ) {
+    return false;
+  }
   return true;
 }
-
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const accessToken = req.cookies.get('access_token')?.value;
