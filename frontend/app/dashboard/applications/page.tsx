@@ -19,6 +19,17 @@ type Application = {
   upcoming_interview: Interview | null;
 };
 
+// Only http/https links are allowed; anything else (e.g. javascript:) is not rendered.
+function safeLink(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url.trim());
+    return u.protocol === 'http:' || u.protocol === 'https:' ? u.href : null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function ApplicationsPage() {
   const res = await apiFetch('/api/applicants/applications');
 
@@ -70,11 +81,11 @@ export default async function ApplicationsPage() {
               {app.upcoming_interview && (
                 <p className="text-sm mt-1">
                   Interview: {new Date(app.upcoming_interview.scheduled_at).toLocaleString('en-GB')}
-                  {app.upcoming_interview.meeting_link && (
+                                    {safeLink(app.upcoming_interview.meeting_link) && (
                     <>
                       {' '}
                       <a
-                        href={app.upcoming_interview.meeting_link}
+                        href={safeLink(app.upcoming_interview.meeting_link) ?? undefined}
                         className="text-blue-600 hover:underline"
                       >
                         Meeting link
