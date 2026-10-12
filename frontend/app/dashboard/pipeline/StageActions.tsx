@@ -1,4 +1,3 @@
-// frontend/app/dashboard/pipeline/StageActions.tsx
 'use client';
 
 import { useState } from 'react';
@@ -26,10 +25,13 @@ export default function StageActions({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [target, setTarget] = useState<string>('');
 
   const currentIdx = STAGES.indexOf(currentStage as (typeof STAGES)[number]);
   const nextStages = STAGES.filter((s, i) => i > currentIdx && s !== 'rejected');
-  const [target, setTarget] = useState<string>(nextStages[0] ?? '');
+  const selected = nextStages.includes(target as (typeof STAGES)[number])
+    ? target
+    : (nextStages[0] ?? '');
 
   if (TERMINAL.includes(currentStage)) return null;
 
@@ -57,7 +59,7 @@ export default function StageActions({
       }
       setError(message);
     } catch {
-      setError('Network error. Please try again.');
+      setError('Network error. The change may not have been saved. Refresh the page to check.');
     } finally {
       setLoading(false);
     }
@@ -69,28 +71,31 @@ export default function StageActions({
     }
   }
 
+  const label = (s: string) => s.replace('_', ' ');
+
   return (
     <div className="mt-2 flex flex-wrap items-center gap-2">
       {nextStages.length > 0 && (
         <>
           <select
-            value={target}
+            aria-label="Move application to stage"
+            value={selected}
             onChange={(e) => setTarget(e.target.value)}
             disabled={loading}
             className="border rounded px-2 py-1 text-sm bg-transparent"
           >
             {nextStages.map((s) => (
               <option key={s} value={s} className="text-black">
-                {s.replace('_', ' ')}
+                {label(s)}
               </option>
             ))}
           </select>
           <button
-            onClick={() => moveTo(target)}
-            disabled={loading || !target}
+            onClick={() => moveTo(selected)}
+            disabled={loading || !selected}
             className="bg-blue-600 text-white px-3 py-1 rounded text-sm disabled:opacity-50"
           >
-            Move
+            {loading ? 'Moving…' : `Move to ${label(selected)}`}
           </button>
         </>
       )}
@@ -101,7 +106,11 @@ export default function StageActions({
       >
         Reject
       </button>
-      {error && <span className="text-sm text-red-500">{error}</span>}
+      {error && (
+        <span role="alert" className="text-sm text-red-500">
+          {error}
+        </span>
+      )}
     </div>
   );
 }

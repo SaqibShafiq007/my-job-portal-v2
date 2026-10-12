@@ -83,17 +83,22 @@ export default function ScheduleInterview({
   return (
     <div className="mt-2 space-y-2 border rounded p-3 max-w-md">
       <div>
-        <label className="block text-xs text-gray-400 mb-1">Date and time</label>
+        <label htmlFor={`sched-at-${applicationId}`} className="block text-xs text-gray-400 mb-1">Date and time</label>
         <input
+          id={`sched-at-${applicationId}`}
           type="datetime-local"
           value={scheduledAt}
           onChange={(e) => setScheduledAt(e.target.value)}
           className="border rounded px-2 py-1 text-sm bg-transparent w-full"
         />
+        <p className="text-xs text-gray-400 mt-1">
+          Your local time ({Intl.DateTimeFormat().resolvedOptions().timeZone}). Stored as UTC.
+        </p>
       </div>
       <div>
-        <label className="block text-xs text-gray-400 mb-1">Meeting link</label>
+        <label htmlFor={`sched-link-${applicationId}`} className="block text-xs text-gray-400 mb-1">Meeting link</label>
         <input
+          id={`sched-link-${applicationId}`}
           type="url"
           value={meetingLink}
           onChange={(e) => setMeetingLink(e.target.value)}
@@ -102,8 +107,9 @@ export default function ScheduleInterview({
         />
       </div>
       <div>
-        <label className="block text-xs text-gray-400 mb-1">Notes (optional)</label>
+        <label htmlFor={`sched-notes-${applicationId}`} className="block text-xs text-gray-400 mb-1">Notes (optional)</label>
         <textarea
+          id={`sched-notes-${applicationId}`}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
@@ -128,7 +134,7 @@ export default function ScheduleInterview({
         </button>
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

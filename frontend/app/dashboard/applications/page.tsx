@@ -67,7 +67,13 @@ export default async function ApplicationsPage() {
       <h1 className="text-2xl font-semibold mb-4">My Applications</h1>
 
       {applications.length === 0 ? (
-        <p className="text-sm text-gray-400">You have not applied to any jobs yet.</p>
+        <p className="text-sm text-gray-400">
+          You have not applied to any jobs yet.{' '}
+          <Link href="/jobs" className="text-blue-600 hover:underline">
+            Browse jobs
+          </Link>{' '}
+          to get started.
+        </p>
       ) : (
         <ul className="space-y-4">
           {applications.map((app) => (
@@ -79,6 +85,12 @@ export default async function ApplicationsPage() {
                 Stage: {app.stage} · Applied on{' '}
                 {new Date(app.created_at).toLocaleDateString('en-GB')}
               </p>
+
+              {app.stage === 'rejected' && (
+                <p className="text-sm mt-1">
+                  Thank you for applying. The company has decided not to move forward this time. Keep exploring other roles.
+                </p>
+              )}
 
               {app.upcoming_interview && (
                 <p className="text-sm mt-1">

@@ -64,10 +64,13 @@ export default function FeedbackForm({ interviewId }: { interviewId: string }) {
         value={feedback}
         onChange={(e) => setFeedback(e.target.value)}
         rows={3}
-        placeholder="Interview feedback"
+        placeholder="Interview feedback "aria-label="Interview feedback"
         className="border rounded px-2 py-1 text-sm bg-transparent w-full"
       />
-      <select
+      <p className="text-xs text-gray-400">
+        The outcome you record updates the application and what the applicant sees in tracking.
+      </p>
+      <select aria-label="Interview outcome"
         value={outcome}
         onChange={(e) => setOutcome(e.target.value as 'moved_forward' | 'rejected')}
         className="border rounded px-2 py-1 text-sm bg-transparent"
@@ -91,7 +94,7 @@ export default function FeedbackForm({ interviewId }: { interviewId: string }) {
           Cancel
         </button>
       </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p role="alert" className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

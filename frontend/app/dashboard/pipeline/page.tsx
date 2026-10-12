@@ -24,6 +24,12 @@ type PipelineApplication = {
   latest_interview: Interview | null;
 };
 
+const OUTCOME_LABEL: Record<string, string> = {
+  pending: 'Pending',
+  moved_forward: 'Moved forward',
+  rejected: 'Rejected',
+};
+
 const STAGES = [
   'applied',
   'screening',
@@ -73,7 +79,7 @@ export default async function PipelinePage() {
               </h2>
 
               {items.length === 0 ? (
-                <p className="text-sm text-gray-500">No applications.</p>
+                <p className="text-sm text-gray-500">No candidates are at this step yet.</p>
               ) : (
                 <ul className="space-y-2">
                   {items.map((app) => (
@@ -88,7 +94,7 @@ export default async function PipelinePage() {
                         <p className="text-sm">
                           Interview:{' '}
                           {new Date(app.latest_interview.scheduled_at).toLocaleString('en-GB')} (
-                          {app.latest_interview.outcome})
+                          (Outcome: {OUTCOME_LABEL[app.latest_interview.outcome] ?? app.latest_interview.outcome})
                         </p>
                       )}  
                       <ResumeLink applicationId={app.id} />
