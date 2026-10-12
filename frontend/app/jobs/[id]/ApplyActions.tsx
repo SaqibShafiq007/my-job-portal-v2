@@ -26,7 +26,13 @@ function errorText(status: number, data: ApiBody): string {
   return data?.error?.message ?? 'Something went wrong. Please try again.';
 }
 
-export default function ApplyActions({ jobId }: { jobId: string }) {
+export default function ApplyActions({
+  jobId,
+  role,
+}: {
+  jobId: string;
+  role: string | null;
+}) {
   const [status, setStatus] = useState<Status>(null);
   const [loading, setLoading] = useState(false);
 
@@ -76,6 +82,29 @@ export default function ApplyActions({ jobId }: { jobId: string }) {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (role === null) {
+    return (
+      <p className="text-sm">
+        <Link href="/login" className="text-blue-600 hover:underline">
+          Log in
+        </Link>{' '}
+        or{' '}
+        <Link href="/register" className="text-blue-600 hover:underline">
+          register
+        </Link>{' '}
+        as an applicant to apply for this job.
+      </p>
+    );
+  }
+
+  if (role !== 'applicant') {
+    return (
+      <p className="text-sm text-gray-400">
+        Applying is only available for applicant accounts.
+      </p>
+    );
   }
 
   return (

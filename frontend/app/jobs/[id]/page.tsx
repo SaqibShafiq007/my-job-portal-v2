@@ -1,4 +1,5 @@
 // frontend/app/jobs/[id]/page.tsx
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
@@ -13,12 +14,24 @@ type JobDetail = {
   createdAt: string;
 };
 
+function decodeRole(token: string): string | null {
+  try {
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    return decoded.role ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function JobDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const token = (await cookies()).get('access_token')?.value;
+  const role = token ? decodeRole(token) : null;
   const res = await apiFetch(`/api/public/jobs/${id}`);
 
   if (res.status === 404) notFound();
@@ -55,7 +68,7 @@ export default async function JobDetailPage({
         </p>
       )}
 
-      <ApplyActions jobId={job.id} />
+      <ApplyActions jobId={job.id} role={role} />
     </main>
   );
 }

@@ -23,8 +23,8 @@ export default function LoginPage() {
     });
 
     if (!res.ok) {
-      const data = await res.json();
-      setError(data.error?.message || 'Login failed');
+      const data = await res.json().catch(() => null);
+      setError(data?.error?.message || 'Login failed. Please try again.');
       setLoading(false);
       return;
     }
