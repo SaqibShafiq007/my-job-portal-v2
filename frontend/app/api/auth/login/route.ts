@@ -1,16 +1,36 @@
-// frontend/app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const res = await fetch(`${process.env.API_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  const body = await req.json().catch(() => null);
+  if (!body) {
+    return NextResponse.json({ message: 'Invalid request' }, { status: 400 });
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(`${process.env.API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    return NextResponse.json(
+      { message: 'Server unavailable. Try again shortly.' },
+      { status: 503 },
+    );
+  }
 
   if (!res.ok) {
-    return NextResponse.json(await res.json(), { status: res.status });
+    const err = await res.json().catch(() => null);
+    return NextResponse.json(
+      err ?? {
+        message:
+          res.status === 429
+            ? 'Too many attempts. Please wait and try again.'
+            : 'Login failed',
+      },
+      { status: res.status },
+    );
   }
 
   const { accessToken, refreshToken, role } = await res.json();

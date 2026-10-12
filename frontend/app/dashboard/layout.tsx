@@ -3,15 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import LogoutButton from './LogoutButton';
-function decodeRole(token: string): string | null {
-  try {
-    const payload = token.split('.')[1];
-    const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-    return decoded.role ?? null;
-  } catch {
-    return null;
-  }
-}
+import { decodeRole } from '@/lib/auth';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();

@@ -3,6 +3,7 @@ import { apiFetch } from '@/lib/api';
 import StageActions from './StageActions';
 import ScheduleInterview from './ScheduleInterview';
 import FeedbackForm from './FeedbackForm';
+import { requireRole } from '@/lib/auth';
 import ResumeLink from './ResumeLink';
 type Interview = {
   id: string;
@@ -33,7 +34,9 @@ const STAGES = [
   'rejected',
 ] as const;
 
+
 export default async function PipelinePage() {
+  await requireRole('recruiter');
   const res = await apiFetch('/api/companies/applications');
 
   if (!res.ok) {

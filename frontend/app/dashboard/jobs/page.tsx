@@ -1,7 +1,7 @@
 // frontend/app/dashboard/jobs/page.tsx
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
-
+import { requireRole } from '@/lib/auth';
 type Job = {
   id: string;
   title: string;
@@ -14,6 +14,7 @@ export default async function JobsPage({
 }: {
   searchParams: Promise<{ status?: string; cursor?: string }>;
 }) {
+  await requireRole('recruiter');
   const resolvedParams = await searchParams;
 
   const params = new URLSearchParams();

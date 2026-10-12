@@ -1,15 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-
-function decodeRole(token: string): string | null {
-  try {
-    const payload = token.split('.')[1];
-    const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-    return decoded.role ?? null;
-  } catch {
-    return null;
-  }
-}
+import { decodeRole } from '@/lib/auth';
 
 // /dashboard has no page of its own: send each role to its starting page.
 // This is navigation only; every destination still checks access itself.

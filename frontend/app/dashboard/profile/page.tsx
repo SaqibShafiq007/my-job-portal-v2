@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import ProfileForm from './ProfileForm';
 import ResumeUpload from './ResumeUpload';
-
+import { requireRole } from '@/lib/auth';
 type Profile = {
   full_name: string;
   headline: string | null;
@@ -20,6 +20,7 @@ async function readError(res: Response): Promise<string> {
 }
 
 export default async function ProfilePage() {
+    await requireRole('applicant');
   const res = await apiFetch('/api/applicants/profile');
 
   if (res.status === 401) redirect('/login');

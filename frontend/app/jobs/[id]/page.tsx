@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
 import ApplyActions from './ApplyActions';
-
+import { decodeRole } from '@/lib/auth';
 type JobDetail = {
   id: string;
   title: string;
@@ -14,15 +14,6 @@ type JobDetail = {
   createdAt: string;
 };
 
-function decodeRole(token: string): string | null {
-  try {
-    const payload = token.split('.')[1];
-    const decoded = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-    return decoded.role ?? null;
-  } catch {
-    return null;
-  }
-}
 
 export default async function JobDetailPage({
   params,

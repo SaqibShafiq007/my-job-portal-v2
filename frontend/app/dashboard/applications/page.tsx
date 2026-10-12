@@ -1,7 +1,7 @@
 // frontend/app/dashboard/applications/page.tsx
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
-
+import { requireRole } from '@/lib/auth';
 type Interview = {
   id: string;
   scheduled_at: string;
@@ -21,6 +21,7 @@ type Application = {
 
 // Only http/https links are allowed; anything else (e.g. javascript:) is not rendered.
 function safeLink(url: string | null): string | null {
+
   if (!url) return null;
   try {
     const u = new URL(url.trim());
@@ -31,6 +32,7 @@ function safeLink(url: string | null): string | null {
 }
 
 export default async function ApplicationsPage() {
+    await requireRole('applicant');
   const res = await apiFetch('/api/applicants/applications');
 
   if (!res.ok) {

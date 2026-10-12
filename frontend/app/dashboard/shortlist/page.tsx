@@ -1,7 +1,7 @@
 import { apiFetch } from '@/lib/api';
 import Link from 'next/link';
 import RemoveButton from './RemoveButton';
-
+import { requireRole } from '@/lib/auth';
 type ShortlistItem = {
   id: string;
   job_id: string;
@@ -12,6 +12,7 @@ type ShortlistItem = {
 };
 
 export default async function ShortlistPage() {
+    await requireRole('applicant');
   const res = await apiFetch('/api/applicants/shortlist');
   const data = await res.json().catch(() => null);
 

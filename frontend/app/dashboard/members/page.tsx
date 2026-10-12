@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { apiFetch } from '@/lib/api';
 import InviteForm from './InviteForm';
 import MemberActions from './MemberActions';
-
+import { requireRole } from '@/lib/auth';
 type Member = {
   recruiterId: string;
   userId: string;
@@ -12,6 +12,7 @@ type Member = {
 };
 
 function getUserIdFromToken(token: string | undefined): string | null {
+
   if (!token) return null;
   try {
     const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8'));
@@ -22,6 +23,7 @@ function getUserIdFromToken(token: string | undefined): string | null {
 }
 
 export default async function MembersPage() {
+  await requireRole('recruiter');
   const res = await apiFetch('/api/companies/members');
 
   if (!res.ok) {
