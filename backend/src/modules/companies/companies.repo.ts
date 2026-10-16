@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'crypto';
 import db from '../../shared/db';
 import type { CreateCompanyInput } from './companies.schema';
 import crypto from 'crypto';
@@ -24,8 +24,8 @@ export async function createCompany(
   userId: string,
   input: CreateCompanyInput,
 ): Promise<{ companyId: string; name: string }> {
-  const companyId = uuid();
-  const recruiterId = uuid();
+  const companyId = randomUUID()
+  const recruiterId = randomUUID()
   const slug = slugify(input.name) + '-' + companyId.slice(0, 8);
 
   await db.query('BEGIN');
@@ -126,7 +126,7 @@ export async function createInvitation(
 ): Promise<string> {
   const rawToken = crypto.randomBytes(32).toString('hex');
   const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
-  const invitationId = uuid();
+  const invitationId = randomUUID()
 
   await db.query(
     `INSERT INTO invitations (id, company_id, email, role, token_hash, expires_at, created_at)
