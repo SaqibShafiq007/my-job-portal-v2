@@ -1,6 +1,3 @@
-// Triggering build with updated env vars
-import { buildApp } from '../src/app';
-
-const app = buildApp();
+import app from '../src/app';
 
 export default app;
