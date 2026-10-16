@@ -1,6 +1,6 @@
 import db from '../../shared/db';
 import { NotFoundError } from '../../shared/errors';
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'crypto';
 import { CreateJobInput, ListCompanyJobsInput } from './jobs.schema';
 
 // ISOLATION RULE:Every piece of data belongs to someone specific, and the 
@@ -52,7 +52,7 @@ export async function createJob(
   companyId: string,
   input: CreateJobInput,
 ): Promise<string> {
-  const jobId = uuid();
+  const jobId = randomUUID();
   await db.query(
     `INSERT INTO jobs
        (id, company_id, title, description, status, deadline, attributes, screening_questions, created_at)

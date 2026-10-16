@@ -1,7 +1,7 @@
 // backend/src/modules/applicants/applicants.service.ts
 import * as repo from './applicants.repo';
 import { BadRequestError, ConflictError, ForbiddenError, NotFoundError } from '../../shared/errors';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { getPresignedUploadUrl } from '../../shared/storage';
 import {config} from '../../shared/config';
 import { pool } from '../../shared/db';
@@ -53,7 +53,7 @@ export async function getResumeUploadUrl(userId: string) {
   const profile = await repo.findApplicantByUserId(userId);
   if (!profile) throw new NotFoundError('Profile not found — create your profile first');
 
-  const key = `resumes/${profile.id}/${uuidv4()}.pdf`;
+  const key = `resumes/${profile.id}/${randomUUID()}.pdf`;
   const uploadUrl = await getPresignedUploadUrl(key, 'application/pdf');
   return { uploadUrl, key };
 }
