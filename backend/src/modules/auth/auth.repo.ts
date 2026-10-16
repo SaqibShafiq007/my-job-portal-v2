@@ -1,9 +1,9 @@
 // src/modules/auth/auth.repo.ts
 import db from '../../shared/db';
 import crypto from 'crypto';
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'crypto';
 
-
+// Replace any call to `uuidv4()` or `v4()` with `randomUUID()`
 export interface UserRow {
   id:            string;
   email:         string;
@@ -176,7 +176,7 @@ export async function createVerifiedUser(
   email: string,
   passwordHash: string,
 ): Promise<string> {
-  const userId = uuid();
+  const userId = randomUUID();
   await db.query(
     `INSERT INTO users (id, email, password_hash, role, status)
      VALUES ($1, $2, $3, 'recruiter', 'active')`,
@@ -191,7 +191,7 @@ export async function createRecruiterRow(
   companyId: string,
   role: string,
 ): Promise<void> {
-  const recruiterId = uuid();
+  const recruiterId = randomUUID();
   await db.query(
     `INSERT INTO recruiters (id, user_id, company_id, company_role, created_at)
      VALUES ($1, $2, $3, $4, NOW())`,
