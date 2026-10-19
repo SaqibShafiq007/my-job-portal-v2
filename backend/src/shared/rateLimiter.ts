@@ -5,10 +5,11 @@ import { config } from './config';
 
 // Global limiter: applies to all routes
 export const globalLimiter = rateLimit({
-  windowMs: config.RATE_LIMIT_WINDOW_MS,
+   windowMs: config.RATE_LIMIT_WINDOW_MS,
   max: config.RATE_LIMIT_MAX,
-  standardHeaders: true,    // include RateLimit-* headers in response
+  standardHeaders: true,
   legacyHeaders: false,
+  validate: { forwardedHeader: false },   // <-- add this
   store: new RedisStore({
     sendCommand: (...args: string[]) => redis.sendCommand(args),
   }),
@@ -28,6 +29,7 @@ export const authLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { forwardedHeader: false },
   store: new RedisStore({
     sendCommand: (...args: string[]) => redis.sendCommand(args),
     prefix: 'rl:auth:',   // separate Redis key namespace from global limiter

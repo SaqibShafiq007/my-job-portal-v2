@@ -19,6 +19,7 @@ import { applicationsRouter } from './modules/applications/applications.routes';
 
 export function buildApp() {
   const app = express();
+  app.set('trust proxy', 1);
 
   // Express-level setup
   app.disable('x-powered-by');
