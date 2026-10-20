@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers';
+﻿import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
 
-  const res = await fetch(`${process.env.API_URL}/api/companies/invitations`, {
+  const res = await fetch(`${process.env.API_URL}/companies/invitations`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

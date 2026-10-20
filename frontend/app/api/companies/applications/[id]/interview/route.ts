@@ -1,4 +1,4 @@
-// frontend/app/api/companies/applications/[id]/interview/route.ts
+﻿// frontend/app/api/companies/applications/[id]/interview/route.ts
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -11,7 +11,7 @@ export async function POST(
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
 
-  const res = await fetch(`${process.env.API_URL}/api/companies/applications/${id}/interview`, {
+  const res = await fetch(`${process.env.API_URL}/companies/applications/${id}/interview`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

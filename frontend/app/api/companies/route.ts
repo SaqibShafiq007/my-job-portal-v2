@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
 
-  const res = await fetch(`${process.env.API_URL}/api/companies`, {
+  const res = await fetch(`${process.env.API_URL}/companies`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

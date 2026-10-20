@@ -1,4 +1,4 @@
-// frontend/app/api/applicants/shortlist/[jobId]/route.ts
+﻿// frontend/app/api/applicants/shortlist/[jobId]/route.ts
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -10,7 +10,7 @@ export async function DELETE(
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
 
-  const res = await fetch(`${process.env.API_URL}/api/applicants/shortlist/${jobId}`, {
+  const res = await fetch(`${process.env.API_URL}/applicants/shortlist/${jobId}`, {
     method: 'DELETE',
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
