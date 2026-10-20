@@ -22,7 +22,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
   const body = await req.json();
   const token = await getToken();
 
-  const res = await fetch(`${process.env.API_URL}/companies/members/${recruiterId}`, {
+  const res = await fetch(`${process.env.API_URL}/api/companies/members/${recruiterId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export async function DELETE(_req: NextRequest, { params }: Ctx) {
   const { recruiterId } = await params;
   const token = await getToken();
 
-  const res = await fetch(`${process.env.API_URL}/companies/members/${recruiterId}`, {
+  const res = await fetch(`${process.env.API_URL}/api/companies/members/${recruiterId}`, {
     method: 'DELETE',
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });

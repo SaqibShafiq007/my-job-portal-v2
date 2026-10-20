@@ -9,7 +9,7 @@ export async function POST(
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
 
-  const res = await fetch(`${process.env.API_URL}/jobs/${id}/publish`, {
+  const res = await fetch(`${process.env.API_URL}/api/jobs/${id}/publish`, {
     method: 'POST',
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });

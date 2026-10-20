@@ -10,7 +10,7 @@ export async function PATCH(
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
 
-  const res = await fetch(`${process.env.API_URL}/companies/interviews/${id}/feedback`, {
+  const res = await fetch(`${process.env.API_URL}/api/companies/interviews/${id}/feedback`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
 
-  const res = await fetch(`${process.env.API_URL}/applicants/profile/resume-upload`, {
+  const res = await fetch(`${process.env.API_URL}/api/applicants/profile/resume-upload`, {
     method: 'POST',
     headers: {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),

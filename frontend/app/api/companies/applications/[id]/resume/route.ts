@@ -10,7 +10,7 @@ export async function GET(
   const cookieStore = await cookies();
   const token = cookieStore.get('access_token')?.value;
 
-  const res = await fetch(`${process.env.API_URL}/companies/applications/${id}/resume`, {
+  const res = await fetch(`${process.env.API_URL}/api/companies/applications/${id}/resume`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
