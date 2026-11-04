@@ -9,6 +9,7 @@ login.json
 Salary*
 nginx/certs/
 backend/*.json
+!backend/vercel.json
 !backend/package.json
 !backend/package-lock.json
 !backend/tsconfig.json
