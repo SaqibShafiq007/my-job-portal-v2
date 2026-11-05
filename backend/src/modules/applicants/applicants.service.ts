@@ -8,6 +8,7 @@ import { pool } from '../../shared/db';
 import queue from '../../shared/queue';
 import { findUserById } from '../auth/auth.repo';
 import { sendApplicationConfirmationEmail } from '../../shared/mailer';
+import { processResume } from '../../worker/handlers/processResume';
 
 
 export async function createProfile(
@@ -75,11 +76,12 @@ export async function confirmResumeUpload(
 
   const resume = await repo.createResume(profile.id, body.filename, body.key);
 
-  // Enqueue background job to download the file and compute word count
-  await queue.add('process-resume', {
-    resumeId: resume.id,
-    s3Key: resume.s3_key,
-  });
+  // Compute word count inline (no worker on Vercel). Best-effort: never fail the upload.
+  try {
+    await processResume(resume.id, resume.s3_key);
+  } catch (err) {
+    console.error('process-resume failed', err);
+  }
 
   return resume;
 }
