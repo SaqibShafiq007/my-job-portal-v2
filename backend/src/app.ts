@@ -16,6 +16,7 @@ import { adminRouter } from './modules/admin/admin.routes';
 import { jobsRouter } from './modules/jobs/jobs.routes';
 import { publicRouter } from './modules/public/publicRouter';
 import { applicationsRouter } from './modules/applications/applications.routes';
+import cronRouter from './modules/cron/cron.routes';
 
 export function buildApp() {
   const app = express();
@@ -52,7 +53,8 @@ export function buildApp() {
   app.use('/api/jobs', jobsRouter);
   app.use('/api/companies/applications', applicationsRouter);
   app.use('/api/companies/interviews', applicationsRouter);
-
+  app.use('/api/cron', cronRouter);
+  
   // Global Error Handler
   app.use(errorHandler);
 
