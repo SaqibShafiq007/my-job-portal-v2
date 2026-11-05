@@ -7,6 +7,8 @@ import {config} from '../../shared/config';
 import { pool } from '../../shared/db';
 import queue from '../../shared/queue';
 import { findUserById } from '../auth/auth.repo';
+import { sendApplicationConfirmationEmail } from '../../shared/mailer';
+
 
 export async function createProfile(
   userId: string,
@@ -160,18 +162,21 @@ export async function applyToJobs(
   }
 
   // Enqueue a confirmation email job for each newly created application
-  if (newlyCreatedJobIds.length > 0) {
+    if (newlyCreatedJobIds.length > 0) {
     const user = await findUserById(userId);
     const jobDetails = await repo.getJobDetailsForNotification(newlyCreatedJobIds);
 
     for (const job of jobDetails) {
-      await queue.add('send-application-confirmation', {
-        applicantEmail: user?.email,
-        jobTitle: job.title,
-        companyName: job.company_name,
-      });
+      if (!user?.email) continue;
+      try {
+        await sendApplicationConfirmationEmail(user.email, job.title, job.company_name);
+      } catch (err) {
+        console.error('application confirmation email failed', err);
+      }
     }
   }
+
+  return { created, skipped };
 
   return { created, skipped };
 }
